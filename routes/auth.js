@@ -49,7 +49,7 @@ router.post('/signup', middlewares.requireAnon, (req, res, next) => {
 
 router.get('/login', middlewares.requireAnon, (req, res, next) => {
   // Ui, esto entonces....
-  res.render('auth/login', {error: 'No hay error'});
+  res.render('auth/login');
 });
 
 router.post('/login', middlewares.requireAnon, (req, res, next) => {
@@ -57,7 +57,8 @@ router.post('/login', middlewares.requireAnon, (req, res, next) => {
   const { username, password } = req.body;
 
   if ( !username || !password ) {
-    return res.render('auth/login', { error: 'Username or password are incorrect'});
+    req.flash('error', 'Username or password are incorrect');
+    return res.redirect('/auth/login');
   }
 
   User.findOne({ username })
@@ -65,7 +66,8 @@ router.post('/login', middlewares.requireAnon, (req, res, next) => {
       if (!user) {
         // No hacer esto... No hacer render in posts
         // returning
-        return res.render('auth/login', { error: 'Username or password are incorrect'})
+        req.flash('error', 'Username or password are incorrect');
+        return res.redirect('/auth/login');
       }
 
       if (bcrypt.compareSync(password /* provided password */, user.password/* hashed password */)) {
@@ -75,7 +77,8 @@ router.post('/login', middlewares.requireAnon, (req, res, next) => {
         res.redirect('/auth/profile');
       } else {
         // No, no, no, no, prohibido
-        res.render('auth/login', { error: 'Username or password are incorrect' });
+        req.flash('error', 'Username or password are incorrect');
+        res.redirect('/auth/login');
       }
     })
     .catch(next);

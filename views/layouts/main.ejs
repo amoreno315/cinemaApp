@@ -7,6 +7,7 @@
       <title>Express Cinema</title>
     </head>
     <body>
+      <%- include('../partials/notifications') %>
       <% if (currentUser) { %>
         <p>Logged in as <%= currentUser.username %> </p> 
         <form action="/auth/logout" method="POST">

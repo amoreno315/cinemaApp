@@ -53,6 +53,7 @@ router.post('/:id/favorites', middlewares.requireUser, (req, res, next) => {
     user.favorites.push(ObjectId(movieId));
     user.save()
     .then((success) => {
+      req.flash('info', 'Añadido correctamente');
       res.redirect('/movies');
     })
     .catch(next);
