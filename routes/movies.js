@@ -5,10 +5,11 @@ const User = require('../models/user');
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 
+const middlewares = require('../middlewares/middlewares')
 
 
 /* GET movies page. */
-router.get('/', (req, res, next) => {
+router.get('/', middlewares.requireUser, (req, res, next) => {
   Movie.find()
     .then(movie => {
       res.render('movies', {movie});
@@ -19,11 +20,11 @@ router.get('/', (req, res, next) => {
 });
 
 // create movie
-router.get('/new', (req, res, next) => {
+router.get('/new', middlewares.requireUser, (req, res, next) => {
   res.render('movies/add')
 })
 
-router.post('/', (req, res, next) => {
+router.post('/', middlewares.requireUser, (req, res, next) => {
   const movie = req.body
   Movie.create(movie)
   .then(() => {
@@ -34,7 +35,7 @@ router.post('/', (req, res, next) => {
   })
 })
 
-router.get('/:id/edit', (req, res, next) => {
+router.get('/:id/edit', middlewares.requireUser, (req, res, next) => {
   const id = req.params.id;
   Movie.findById(id)
   .then(movie => {
@@ -43,16 +44,15 @@ router.get('/:id/edit', (req, res, next) => {
   .catch(next);
 })
 
-router.post('/:id/favorites', (req, res, next) => {
-  const id = req.params.id;
+router.post('/:id/favorites', middlewares.requireUser, (req, res, next) => {
+  const movieId = req.params.id;
+  const userId = req.session.currentUser._id;
   
-  User.findOne({userName: 'Paco'})
+  User.findById(userId)
   .then(user => {
-    console.log(user)
-    user.favorites.push(ObjectId(id));
+    user.favorites.push(ObjectId(movieId));
     user.save()
     .then((success) => {
-      console.log('success', success);
       res.redirect('/movies');
     })
     .catch(next);
@@ -60,7 +60,7 @@ router.post('/:id/favorites', (req, res, next) => {
     .catch(next);
 })
 
-router.post('/:id', (req, res, next) => {
+router.post('/:id', middlewares.requireUser, (req, res, next) => {
   const movie = req.body;
   const id = req.params.id;
   Movie.findByIdAndUpdate(id, movie)
@@ -72,7 +72,7 @@ router.post('/:id', (req, res, next) => {
   })
 })
 
-router.post('/:id/delete', (req, res, next) => {
+router.post('/:id/delete', middlewares.requireUser, (req, res, next) => {
   const id = req.params.id;
   Movie.findByIdAndDelete(id)
   .then(result => {
@@ -84,7 +84,7 @@ router.post('/:id/delete', (req, res, next) => {
 })
 
 // Get movie detail
-router.get('/:_id', (req, res, next) => {
+router.get('/:_id', middlewares.requireUser, (req, res, next) => {
   const id = req.params._id;
   Movie.findById(id)
     .then(movie => {

@@ -87,13 +87,13 @@ router.post('/logout', middlewares.requireUser, (req, res, next) => {
 });
 
 router.get('/profile', middlewares.requireUser, (req, res, next) => {
-  const user = req.session.currentUser;
+  const id = req.session.currentUser._id;
 
-  User.findById(user._id)
+  User.findById(id)
   .populate('favorites')
   .then((user) => {
-    console.log(user);
-    res.render('auth/profile', { user: user })
+    console.log('user', user);
+    res.render('auth/profile', { user })
   })
   .catch(next);
 });
