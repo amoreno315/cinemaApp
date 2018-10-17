@@ -1,0 +1,7 @@
+<h1>Profile de <%= user.username %></h1>
+<h2><%= user.username %></h2>
+<ul>
+  <% user.favorites.forEach((film) => { %>
+    <li><%= film.title %></li>
+  <% }) %>
+</ul>

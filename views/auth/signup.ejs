@@ -1,0 +1,19 @@
+<h1>Create a user</h1>
+<form method="POST" action="/auth/signup">
+
+  <div class="field" >
+    <label>username</label>
+    <input type="text" name="username"/>
+  </div>
+
+  <div class="field" >
+    <label>password</label>
+    <input type="password" name="password"/>
+  </div>
+
+  <div class="field submit">
+    <button type="submit">Signup</button>
+  </div>
+
+  <div class="validation"><%= error %></div>
+</form>

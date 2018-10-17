@@ -1,0 +1,12 @@
+<div class="container  flex-column  movie-container">
+  <img src="<%= item.image %>" alt="movie poster" height="200px" width="150px">
+  <p> <%= item.title %></p>
+  <a href="/movies/<%= item._id%>">See more</a>
+  <a href="/movies/<%= item._id%>/edit">Edit</a>
+  <form action="/movies/<%= item._id %>/delete" method="post">
+    <input type="submit" value="delete">
+  </form>
+  <form action="/movies/<%= item._id %>/favorites" method="post">
+    <input type="submit" value="add to Favorites">
+  </form>
+</div>
